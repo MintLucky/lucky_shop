@@ -120,7 +120,7 @@ class CartController
                     $adminEmail = 'only4jobmail@gmail.com';
                     $message = 'Новый заказ на сайте' .$_SERVER['SERVER_NAME']. 'Зайдите в админпанель сайта для просмотра детальной информации';
                     $subject = 'Новый заказ на сайте'.$_SERVER['SERVER_NAME'];
-                    mail($adminEmail, $subject, $message, "From: luckyshop@ls.ru \r\n");
+                    mail($adminEmail, $subject, $message);
 
                     // Очищаем корзину
                     Cart::cleanCart();

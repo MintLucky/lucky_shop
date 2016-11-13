@@ -1,8 +1,5 @@
 <?php
 
-//include_once ROOT .'/models/Category.php';
-//include_once ROOT .'/models/Product.php';
-
 class SiteController
 {
     public function actionIndex()
@@ -42,7 +39,7 @@ class SiteController
                 $adminEmail = 'only4jobmail@gmail.com';
                 $message = "Текст: {$userText}. От {$userEmail}";
                 $subject = 'Сообщение с сайта  '. $_SERVER['SERVER_NAME'];
-                $result = mail($adminEmail, $subject, $message, "From: luckyshop@ls.ru \r\n");
+                $result = mail($adminEmail, $subject, $message);
                 $result = true;
                 
             }
