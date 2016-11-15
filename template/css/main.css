@@ -1444,7 +1444,7 @@ h2.title {
 .signup-form {
   background: rgba(215, 205, 220, 0.99) none repeat scroll 0 0;
   padding:20px;
-  min-height:51vh;
+  /*min-height:51vh;*/
 }
 
 .login-form h2, .signup-form h2 {
@@ -2599,7 +2599,7 @@ header {
 }
 .background {
   background: rgba(0, 0, 0, 0) url("/upload/Clothing.svg") no-repeat scroll 0 0 / cover;
-  min-height:57vh;
+  min-height: calc(100vh - 246px - 40px);
 }
 .background-shorts {
   background: rgba(0, 0, 0, 0) url("/upload/shorts.jpg") no-repeat left 150px top 0;
@@ -2609,7 +2609,7 @@ header {
 .background-hat {
   background: rgba(0, 0, 0, 0) url("/upload/7.jpg") no-repeat top 20px left 900px;
   background-size: cover;
-  min-height:47vh;
+  min-height: calc(100vh - 246px - 40px);
 }
 .background-pants {
   background: rgba(0, 0, 0, 0) url("/upload/9.jpg") no-repeat;
@@ -2620,7 +2620,7 @@ header {
 .background-hat-2 {
   background: rgba(0, 0, 0, 0) url("/upload/7.jpg") no-repeat top 180px left 900px;
   background-size: cover;
-  min-height:57vh;
+  min-height: calc(100vh - 246px - 40px);
 }
 .opacity-2 {
   opacity: 0.2;
