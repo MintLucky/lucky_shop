@@ -2,20 +2,27 @@
 
 class UserController
 {
+    /**
+     *  Action для страницы регистрации пользователя
+     */
     public function actionRegister()
     {
+        // Переменные для формы
         $name = '';
         $email = '';
         $password = '';
-
+        
+        
+        // Обрабатываем форму
         if (isset($_POST['submit'])) {
             $name = $_POST['name'];
             $email = $_POST['email'];
             $password = $_POST['password'];
 
-
+            // Флаг ошибок
             $errors = false;
-
+            
+            // Валидация полей формы
             if (!User::checkName($name)) {
                 $errors[] = 'Имя не должно быть короче 3-х символов';
             }
@@ -31,7 +38,9 @@ class UserController
             if (User::checkEmailExists($email)) {
                 $errors[] = 'Такой email уже используется';
             }
-
+            
+            
+            // Если ошибок нет регистрируем пользователя
             if ($errors == false) {
                 $result = User::register($name, $email, $password);
             }
@@ -42,11 +51,15 @@ class UserController
         return true;
     }
 
+    /**
+     *  Action для страницы авторизации пользователя
+     */
     public function actionLogin()
     {
         $email = '';
         $password = '';
 
+        // Обрабатываем форму
         if (isset($_POST['submit'])) {
             $email = $_POST['email'];
             $password = $_POST['password'];
@@ -82,12 +95,19 @@ class UserController
         return true;
     }
 
+    /**
+     *  Action для выхода залогиненного пользователя 
+     */
     public function actionLogout()
     {
         unset($_SESSION["user"]);
         header("Location: /");
     }
-    
+
+
+    /**
+     *  Action Для страницы редактирования профиля пользователя
+     */
     public function actionEdit()
     {
         $name = '';
@@ -123,12 +143,17 @@ class UserController
         return true;
     }
 
+
+    /**
+     *  Action для страницы просмотра истории заказов пользователя
+     */
     public function actionHistory()
     {
-        
+        // Получаем информацию о пользователе
         $userId = User::checkLogged();
         $user = User::getUserById($userId);
-
+        
+        // Получаем список заказов пользователя
         $ordersList = Order::getOrdersListByUserId($userId);
 
         require_once (ROOT .'/views/cabinet/history.php');
@@ -136,6 +161,11 @@ class UserController
         return true;
     }
 
+
+    /**
+     *  Action для страницы просмотра информации о конкретном заказе 
+     *  пользователем в его истории заказов
+     */
     public function actionViewOrder($orderId)
     {
         $orderId = intval($orderId);
@@ -146,9 +176,7 @@ class UserController
         // Получаем информацию о товарах в заказе
         $productsQuantity = $order['products'];
         $productsQuantity = json_decode($productsQuantity, 1);
-
         $productsIds = array_keys($productsQuantity);
-
         $products = Product::getProductsByIds($productsIds);
 
         require_once (ROOT .'/views/cabinet/view.php');

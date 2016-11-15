@@ -2,6 +2,10 @@
 
 class Category
 {
+    /**
+     * Возвращает массив категорий (для левого меню)
+     * @return array
+     */
     public static function getCategoriesList()
     {
         $db=DB::getConnection();
@@ -20,6 +24,11 @@ class Category
 
     }
 
+    /**
+     * Возвращает массив категорий для админпанели
+     * при этом в список попадаю как включенные так и выключенные категории
+     * @return array
+     */
     public static function getCategoriesListAdmin()
     {
         $db=DB::getConnection();
@@ -40,6 +49,11 @@ class Category
 
     }
 
+    /**
+     * Удаляет категорию с заданным id
+     * @param $id
+     * @return bool
+     */
     public static function deleteCategoryById($id)
     {
         $db = DB::getConnection();
@@ -51,6 +65,11 @@ class Category
         return $result->execute();
     }
 
+    /**
+     * Создает новую категорию
+     * @param $options
+     * @return bool
+     */
     public static function createCategory($options)
     {
         $db = DB::getConnection();
@@ -67,18 +86,34 @@ class Category
         return $result->execute();
     }
 
+    /**
+     * Возвращает категорию с указанным id
+     * @param $id
+     * @return mixed
+     */
     public static function getCategoryByID($id)
     {
         $id = intval($id);
         if ($id) {
             $db = DB::getConnection();
-            $result = $db->query("SELECT * FROM category WHERE id = '$id'" );
-
+            $sql = 'SELECT * FROM category WHERE id = :id';
+            
+            $result = $db->prepare($sql);
+            $result->bindParam(':id', $id, PDO::PARAM_INT);
+            
             $result->setFetchMode(PDO::FETCH_ASSOC);
+            
+            $result->execute();
+            
             return $result->fetch();
         }
     }
 
+    /**
+     * Получаем название категории по id
+     * @param $id
+     * @return mixed
+     */
     public static function getCategoriesNameById($id)
     {
         $id = intval($id);
@@ -94,7 +129,12 @@ class Category
         }
     }
 
-
+    /**
+     * Обновляет информацию в категории с указанным id
+     * @param $id
+     * @param $options
+     * @return bool
+     */
     public static function updateCategoryById($id, $options)
     {
         $db = DB::getConnection();
@@ -115,7 +155,11 @@ class Category
         return $result->execute();
 
     }
-    
+
+    /**
+     * Возвращает статус категории в виде текста
+     * @param $status
+     */
     public static function getStatusText($status)
     {
         switch($status) {

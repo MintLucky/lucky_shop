@@ -2,15 +2,22 @@
 
 class Product
 {
+    // Количество отображаемых товаров на странице по умолчанию
     const SHOW_BY_DEFAULT = 9;
 
-
+    /**
+     * Возвращает массив последних товаров
+     * @param int $count
+     * @param int $page
+     * @return array
+     */
     public static function getLatestProducts($count = self::SHOW_BY_DEFAULT, $page = 1)
     {
         
         $count = intval($count);
         $page = intval($page);
-        
+
+        // Расчитываем смещение для запроса
         $offset = ($page-1) * $count;
 
         $db = DB::getConnection();
@@ -36,6 +43,12 @@ class Product
 
     }
 
+    /**
+     * Возвращает список товаров указанной категории по id категории
+     * @param bool $categoryId
+     * @param int $page
+     * @return array
+     */
     public static function getProductsListByCategory($categoryId = false, $page = 1)
     {
         if ($categoryId) {
@@ -67,18 +80,34 @@ class Product
             }
     }
 
+    /**
+     * Возвращает данные о товаре по id
+     * @param $id
+     * @return mixed
+     */
     public static function getProductByID($id)
     {
         $id = intval($id);
         if ($id) {
             $db = DB::getConnection();
-            $result = $db->query("SELECT * FROM products WHERE id = '$id'" );
-            
+            $sql = 'SELECT * FROM products WHERE id = :id';
+
+            $result = $db->prepare($sql);
+            $result->bindParam(':id', $id, PDO::PARAM_INT);
+
             $result->setFetchMode(PDO::FETCH_ASSOC);
+
+            $result->execute();
+
             return $result->fetch();
         }
     }
 
+    /**
+     * Возвращает список товаров по казанным id товаров
+     * @param $idsArray
+     * @return array
+     */
     public static function getProductsByIds($idsArray)
     {
 
@@ -106,20 +135,33 @@ class Product
 
     }
 
+    /**
+     * Возвращает количество товаров в указанной категории
+     * @param $categoryId
+     * @return mixed
+     */
     public static function getTotalProductsInCategory($categoryId)
     {
         if ($categoryId) {
             $db = DB::getConnection();
-            $result = $db->query("SELECT count(id) AS count FROM products 
-                                WHERE status = '1' AND id_catalog = '$categoryId'" );
+            $sql = "SELECT count(id) AS count FROM products 
+                    WHERE status = '1' AND id_catalog = :category_id";
 
-            $result->setFetchMode(PDO::FETCH_ASSOC);
+            $result = $db->prepare($sql);
+            $result->bindParam(':category_id', $categoryId, PDO::PARAM_INT);
+
+            $result->execute();
+
+            // Возвращаем значение count - количество
             $row = $result->fetch();
-
             return $row['count'];
         }
     }
 
+    /**
+     * Возвращает количество всех не скрытых товаров
+     * @return mixed
+     */
     public static function getTotalProductsCount()
     {
          
@@ -133,7 +175,12 @@ class Product
         return $row['count'];
         
     }
-    
+
+    /**
+     * Возвращает список всех рекомендуемых не скрытых товаров
+     * @param int $count
+     * @return array
+     */
     public static function getRecommendedProducts($count = self::SHOW_BY_DEFAULT)
     {
         $db = DB::getConnection();
@@ -160,6 +207,11 @@ class Product
         return $products;
     }
 
+    /**
+     * Удаляет товар по id
+     * @param $id
+     * @return bool
+     */
     public static function deleteProductById($id)
     {
         $db = DB::getConnection();
@@ -171,7 +223,10 @@ class Product
         return $result->execute();
     }
 
-
+    /**
+     * Возвращает список всех товаров
+     * @return array
+     */
     public static function getProductsList()
     {
 
@@ -193,6 +248,11 @@ class Product
 
     }
 
+    /**
+     * Создает товар
+     * @param $options
+     * @return int|string
+     */
     public static function createProduct($options)
     {
         $db = DB::getConnection();
@@ -221,7 +281,12 @@ class Product
         return 0;
     }
 
-
+    /**
+     * Редактирует товар с указанным id
+     * @param $id
+     * @param $options
+     * @return bool
+     */
     public static function updateProductById($id, $options)
     {
         $db = DB::getConnection();
@@ -257,7 +322,11 @@ class Product
 
     }
 
-
+    /**
+     * Возвращает путь к картинке определенного товара с указанным id если она существует
+     * @param $id
+     * @return string
+     */
     public static function getImage($id)
     {
         // Изображение-пустышка
@@ -278,7 +347,12 @@ class Product
         return $path .$noImage;
 
     }
-    
+
+    /**
+     * Возвращает общее количество заказанных товаров в заказе
+     * @param $orderProductsJson
+     * @return int
+     */
     public static function getProductsOrderCount($orderProductsJson)
     {
         $orderProductsArray = json_decode($orderProductsJson);

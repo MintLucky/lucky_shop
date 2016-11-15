@@ -2,14 +2,20 @@
 
 class SiteController
 {
+    /**
+     * Action для главной страницы
+     */
     public function actionIndex()
     {
+        // Список категорий для левого меню
         $categories = [];
         $categories = Category::getCategoriesList();
-
+        
+        // Список последних товаров
         $latestProducts = [];
         $latestProducts = Product::getLatestProducts(6);
 
+        // Список рекомендуемых товаров (товаров для слайдера)
         $recommendedProducts = [];
         $recommendedProducts = Product::getRecommendedProducts();
 
@@ -18,23 +24,29 @@ class SiteController
         return true;
     }
 
+    /**
+     * Action для страницы "Контакты"
+     */
     public function actionContact()
     {
         $userEmail = '';
         $userText = '';
         $result = false;
-
+        
+        // Обрабатываем форму
         if (isset($_POST['submit'])) {
 
             $userEmail = $_POST['userEmail'];
             $userText = $_POST['userText'];
 
             $errors = false;
-
+            
+            // Валидация
             if(!User::checkEmail($userEmail)) {
                 $errors[] = 'Неправильный email';
             }
-
+            
+            // Если ошибок нет - отправляем письмо на нужный email
             if ($errors == false) {
                 $adminEmail = 'only4jobmail@gmail.com';
                 $message = "Текст: {$userText}. От {$userEmail}";
@@ -49,12 +61,17 @@ class SiteController
 
         return true;
     }
-    
+
+    /**
+     * Action для страницы "О магазине"
+     */
     public static function actionAbout()
     {
+        // Список категорий для левого меню
         $categories = [];
         $categories = Category::getCategoriesList();
 
+        // Список рекомендуемых товаров (товаров для слайдера)
         $recommendedProducts = [];
         $recommendedProducts = Product::getRecommendedProducts();
         

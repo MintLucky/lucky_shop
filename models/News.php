@@ -2,24 +2,36 @@
 
 class News
 {
+    // Количество новостей выводимых на страницу по умлолчанию
     const SHOW_BY_DEFAULT = 3;
-    
+
+    /**
+     * Возвращает новость по id
+     * @param $id
+     * @return bool|mixed
+     */
     public static function getNewsItemById($id)
     {
         $id = intval($id);
 
-        if ($id) {
-            
-            $db = DB::getConnection();
-            $result = $db->query('SELECT * FROM news WHERE id=' . $id);
-            $result->setFetchMode(PDO::FETCH_ASSOC);
-            $newsItem = $result->fetch();
+        $db = DB::getConnection();
 
-            return $newsItem;
-        }
-        return true;
+        $sql='SELECT * FROM news WHERE id=:id';
+
+        $result = $db->prepare($sql);
+        $result->bindParam(':id',$id,PDO::PARAM_INT);
+        $result->setFetchMode(PDO::FETCH_ASSOC);
+        $result->execute();
+        $newsItem = $result->fetch();
+
+        return $newsItem;
+
     }
 
+    /**
+     * Возвращает количество всех отображаемых новостей
+     * @return mixed
+     */
     public static function getTotalNewsCount()
     {
         $db = DB::getConnection();
@@ -32,6 +44,12 @@ class News
         return $row['count'];
     }
 
+    /**
+     * Возвращает список всех новостей
+     * @param $count
+     * @param $page
+     * @return array
+     */
     public static function getNewsList($count, $page)
     {
         $newsList = array();
@@ -63,7 +81,11 @@ class News
         return $newsList;
     }
 
-
+    /**
+     * Возвращает список всех новостей для админпанели
+     * причем как видимых так и скрытых
+     * @return array
+     */
     public static function getNewsListAdmin()
     {
 
@@ -89,7 +111,11 @@ class News
         return $newsList;
     }
 
-
+    /**
+     * Создает новость
+     * @param $options
+     * @return int|string
+     */
     public static function createNews($options)
     {
         $db = DB::getConnection();
@@ -112,7 +138,11 @@ class News
         return 0;
     }
 
-
+    /**
+     * Удаляет новость по id
+     * @param $id
+     * @return bool
+     */
     public static function deleteNewsById($id)
     {
         $db = DB::getConnection();
@@ -124,7 +154,12 @@ class News
         return $result->execute();
     }
 
-
+    /**
+     * Редактирует новость по id
+     * @param $id
+     * @param $options
+     * @return bool
+     */
     public static function updateNewsItemById($id, $options)
     {
         $db = DB::getConnection();
@@ -147,6 +182,11 @@ class News
         return $result->execute();
     }
 
+    /**
+     * Возвращает путь к картинке (если она существует) определенной новости с указанным id
+     * @param $id
+     * @return bool|string
+     */
     public static function getImage($id)
     {
         // Изображение-пустышка

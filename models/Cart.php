@@ -2,36 +2,13 @@
 
 class Cart
 {
-//    // Добавление товара в корзину
-//    public static function addProduct($id)
-//    {
-//        $id = intval($id);
-//
-//        // Пустой массив для товаров в корзине
-//        $productsInCart = array();
-//
-//        // Если товары уже есть в корзине (они хранятся в сессии)
-//        if (isset($_SESSION['products'])) {
-//            // То заполним наш массив товарами
-//            $productsInCart = $_SESSION['products'];
-//        }
-//
-//        // Если товар есть в корзине, но был добавлен еще раз, увеличим количество
-//        if (array_key_exists($id, $productsInCart)) {
-//            $productsInCart[$id] ++;
-//        }
-//        else {
-//            // Добавляем новый товар в корзину
-//            $productsInCart[$id] = 1;
-//        }
-//
-//        $_SESSION['products'] = $productsInCart;
-//
-//        return self::countItems();
-//
-//    }
 
-    // Добавление товара в корзину
+    /**
+     * Добавление товара в корзину
+     * @param $id
+     * @param int $count
+     * @return int
+     */
     public static function addProduct($id, $count = 1)
     {
         $id = intval($id);
@@ -62,7 +39,10 @@ class Cart
     }
 
 
-    // Подсчет кол ичества товаров в корзине (в сессии)
+    /**
+     * Подсчет колличества товаров в корзине (в сессии)
+     * @return int
+     */
 
     public static function countItems()
     {
@@ -79,6 +59,11 @@ class Cart
         }
     }
 
+    /**
+     * Возвращает массив товаров добавленных в корзину если он существует
+     * в ином случае возвращает false
+     * @return bool
+     */
     public static function getProducts()
     {
         if(isset($_SESSION['products'])) {
@@ -86,7 +71,12 @@ class Cart
         }
         return false;
     }
-    
+
+    /**
+     * Возвращает общую сумму товаров в корзине
+     * @param $products
+     * @return int
+     */
     public static function getTotalPrice($products)
     {
         $productsInCart = self::getProducts();
@@ -102,6 +92,10 @@ class Cart
         return $total;
     }
 
+    /**
+     * Очистка козины
+     * @return bool
+     */
     public static function cleanCart()
     {
         if(isset($_SESSION['products'])) {
@@ -110,6 +104,11 @@ class Cart
         return true;
     }
 
+    /**
+     * Удаляет определенный товар из корзины по его id
+     * @param $id
+     * @return bool
+     */
     public static function deleteProduct($id)
     {
         $id = intval($id);
@@ -117,6 +116,6 @@ class Cart
         if(array_key_exists($id, $_SESSION['products'])) {
             unset ($_SESSION['products'][$id]);
         }
-        
+        return true;
     }
 }

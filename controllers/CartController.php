@@ -2,6 +2,9 @@
 
 class CartController
 {
+    /**
+     * Action для добавления товара в корзину (не используется, оставлен на всякий случай)
+     */
     public function actionAdd($id)
     {
         if($id)
@@ -15,6 +18,9 @@ class CartController
         }
     }
 
+    /**
+     * Action для добавления товара в корзину с помощью Ajax(используется)
+     */
     public function actionAddAjax($id)
     {
         // По умолчанию количство добавляемых товаров = 1
@@ -34,8 +40,12 @@ class CartController
         }
     }
 
+    /**
+     * Action для страницы "Корзина"
+     */
     public function actionIndex()
-    {
+    {   
+        
         $categories = [];
         $categories = Category::getCategoriesList();
         
@@ -56,8 +66,10 @@ class CartController
         
         return true;
     }
-    
-    // Очистка корзины
+
+    /**
+     * Action для полной очистки корзины
+     */
     public function actionClean()
     {
         Cart::cleanCart();
@@ -66,7 +78,9 @@ class CartController
     }
 
 
-
+    /**
+     * Action для страницы оформления заказа
+     */
     public function actionCheckout()
     {
         $categories = [];
@@ -127,8 +141,7 @@ class CartController
                 }
             }
         }
-
-
+        
         // Форма не отправлена
         else {
 
@@ -154,7 +167,7 @@ class CartController
                 $userPhone = false;
                 $userComment = false;
 
-                // Пользователь авторизован ?
+                // Пользователь авторизован?
                 if(User::isGuest()) {
                     // Нет. Значения для формы пустые
                 }
@@ -171,7 +184,10 @@ class CartController
 
         require_once (ROOT .'/views/cart/checkout.php');
     }
-    
+
+    /**
+     * Action для удаления конкретного товара из корзины
+     */    
     public function actionDelete($id)
     {
         if($id) {

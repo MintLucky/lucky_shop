@@ -2,6 +2,15 @@
 
 class Order
 {
+    /**
+     * Сохраняет данные заказа в БД
+     * @param $userName
+     * @param $userPhone
+     * @param $userComment
+     * @param $userId
+     * @param $productsInCart
+     * @return bool
+     */
     public static function save($userName, $userPhone, $userComment, $userId, $productsInCart)
     {
         $productsJson = json_encode($productsInCart);
@@ -21,7 +30,10 @@ class Order
         return $result->execute();
     }
 
-
+    /**
+     * Возвращает статус заказа в виде текста
+     * @param $status
+     */
     public static function getStatusText($status)
     {
         switch($status){
@@ -40,6 +52,10 @@ class Order
         }
     }
 
+    /**
+     * Возвращает список всех заказов
+     * @return array
+     */
     public static function getOrdersList()
     {
 
@@ -66,6 +82,11 @@ class Order
 
     }
 
+    /**
+     * Возвращает заказ по id
+     * @param $id
+     * @return mixed
+     */
     public static function getOrderById($id)
     {
         $id = intval($id);
@@ -78,6 +99,11 @@ class Order
         }
     }
 
+    /**
+     * Удаляет заказ по id
+     * @param $id
+     * @return bool
+     */
     public static function deleteOrderById($id)
     {
         $db = DB::getConnection();
@@ -89,6 +115,12 @@ class Order
         return $result->execute();
     }
 
+    /**
+     * Редактирует заказ по id
+     * @param $id
+     * @param $options
+     * @return bool
+     */
     public static function updateOrderById($id, $options)
     {
         $db = DB::getConnection();
@@ -113,6 +145,11 @@ class Order
         return $result->execute();
     }
 
+    /**
+     * Возвращает список заказов определенного пользователя по id пользователя
+     * @param $id
+     * @return array
+     */
     public static function getOrdersListByUserId($id)
     {
         $id = intval($id);
@@ -121,7 +158,7 @@ class Order
 
             $ordersList = array();
 
-            $sql = "SELECT * FROM product_orders WHERE user_id = " .$id;
+            $sql = "SELECT * FROM product_orders WHERE user_id =:id";
             $result = $db->prepare($sql);
             $result->bindParam(':id', $id, PDO::PARAM_INT);
             $result->execute();
