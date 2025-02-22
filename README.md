@@ -1,10 +1,8 @@
-Simple CMS for a web store.
+##A simple custom self-made CMS for a web store.
 
-Technologies:
-PHP + MySql,
-OOP, MVC 
+#Technologies: PHP + MySql, OOP, MVC 
 
-Html template was used - E-SHOPPER.
+HTML template was used - E-SHOPPER.
 
                                   
                                   
